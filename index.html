@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cocotte World Maker 🍊</title>
+    <meta name="description" content="9つの要素で世界を創ろう！創作活動のための世界観構築ツール">
+
+    <!-- OGP設定（画像URLは自分で設定してね！） -->
+    <meta property="og:title" content="Cocotte World Maker 🍊">
+    <meta property="og:description" content="9つの要素で世界を創ろう！創作活動のための世界観構築ツール">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mofu-mitsu.github.io/world-maker/">
+    <meta property="og:image" content="https://mofu-mitsu.github.io/world-maker/OGP.PNG">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <!-- Favicon（絵文字🍊） -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍊</text></svg>">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- html2canvas (画像保存用) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+        :root {
+            --bg-color: #fff8e1;
+            --main-color: #ff9800;
+            --accent-color: #ffc107;
+            --text-color: #5d4037;
+            --border-color: #ffe0b2;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: "M PLUS Rounded 1c", sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--main-color), var(--accent-color));
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
+            color: white;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 24px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .intro-box {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+            border: 3px solid var(--border-color);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            font-size: 14px;
+        }
+
+        .section {
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .section h3 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: #f57c00;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+        }
+
+        .icon-circle {
+            background-color: #fff3e0;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: var(--text-color);
+        }
+
+        input[type="text"], textarea, select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 2px solid var(--border-color);
+            font-size: 14px;
+            box-sizing: border-box;
+            outline: none;
+            font-family: inherit;
+            background-color: #fff;
+            margin-bottom: 15px;
+        }
+
+        input[type="text"]:focus, textarea:focus, select:focus {
+            border-color: var(--main-color);
+        }
+
+        /* Checkbox Grid */
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            background-color: var(--bg-color);
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: normal;
+            margin-bottom: 0;
+        }
+
+        input[type="checkbox"] {
+            accent-color: var(--main-color);
+            margin-right: 8px;
+            transform: scale(1.2);
+        }
+
+        /* Buttons */
+        .btn-main {
+            background-color: var(--main-color);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(255, 152, 0, 0.4);
+            transition: transform 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-main:active {
+            transform: scale(0.98);
+        }
+
+        .btn-sub {
+            background-color: var(--accent-color);
+            color: var(--text-color);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            margin: 5px;
+        }
+        
+        .btn-white {
+            background-color: #fff;
+            border: 2px solid var(--border-color);
+            color: var(--text-color);
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            margin: 5px;
+        }
+
+        /* Output Area */
+        #output-area {
+            display: none;
+            margin-top: 30px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .world-bible {
+            background-color: white;
+            padding: 40px;
+            border-radius: 20px;
+            border: 4px solid var(--main-color);
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            color: #333;
+        }
+
+        .output-item {
+            margin-bottom: 8px;
+        }
+        .output-label {
+            color: #f57c00;
+            font-weight: bold;
+        }
+
+        /* Scroll Top */
+        #scroll-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--main-color);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            cursor: pointer;
+            font-size: 20px;
+            display: none;
+            z-index: 100;
+        }
+
+        /* Top Link */
+        .top-link {
+            text-align: center;
+            margin-top: 30px;
+            margin-bottom: 50px;
+        }
+        .top-link a {
+            color: var(--main-color);
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 20px;
+            border-radius: 20px;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1><i class="fas fa-globe" style="margin-right: 10px;"></i>Cocotte World Maker</h1>
+    <p style="margin: 5px 0 0; color: rgba(255,255,255,0.9); font-size: 12px;">9つの要素で世界を創ろう🍊</p>
+</header>
+
+<div class="container">
+
+    <div class="intro-box">
+        <p><strong>💡 使い方:</strong><br>
+        上から順に埋めていくだけで、物語の舞台となる「世界」が完成します。<br>
+        「生と死の狭間」や「箱庭」など、好きな設定を選んでみてください✨</p>
+    </div>
+
+    <!-- Input Form -->
+    <form id="world-form">
+        <!-- ① 基礎世界 -->
+        <div class="section">
+            <h3><div class="icon-circle"><i class="fas fa-shapes"></i></div>① 基礎世界（コアの土台）</h3>
+            <label>舞台タイプ</label>
+            <select id="stageType">
+                <option>現代ファンタジー</option>
+                <option>地続きの現代</option>
+                <option>異世界ファンタジー</option>
+                <option>ハイテク宇宙時代</option>
+                <option>AI管理社会</option>
+                <option>生と死の狭間・霊界</option>
+                <option>箱庭・閉鎖空間</option>
+                <option>ポストアポカリプス</option>
+                <option>海底都市</option>
+                <option>空中浮遊大陸</option>
+            </select>
+            
+            <label>文明レベル</label>
+            <select id="civilization">
+                <option>現代レベル</option>
+                <option>原始・部族社会</option>
+                <option>中世・剣と魔法</option>
+                <option>近世・蒸気機関</option>
+                <option>近未来・サイバー</option>
+                <option>超古代文明の遺跡</option>
+            </select>
+
+            <label>環境・気候</label>
+            <input type="text" id="environment" value="四季がある標準的な気候" placeholder="例：砂漠化が進んでいる、雨が止まない...">
+
+            <label>地形の特徴</label>
+            <input type="text" id="terrain" value="大陸と島国" placeholder="例：浮遊大陸、巨大な樹の上...">
+
+            <label>主なエネルギー</label>
+            <input type="text" id="energy" value="科学と電力が主" placeholder="例：魔力、電力、蒸気、生命力...">
+        </div>
+
+        <!-- ② 世界のクセ -->
+        <div class="section">
+            <h3><div class="icon-circle"><i class="fas fa-magic"></i></div>② 世界の“クセ”設定</h3>
+            <div class="checkbox-grid" id="quirks-container">
+                <!-- JSで生成 -->
+            </div>
+        </div>
+
+        <!-- ③〜⑦ -->
+        <div class="section">
+            <h3><div class="icon-circle"><i class="fas fa-users"></i></div>③ 種族・文化・価値観</h3>
+            <textarea id="races" rows="4" placeholder="主要な種族、社会階層、タブー、祝祭イベント..."></textarea>
+        </div>
+
+        <div class="section">
+            <h3><div class="icon-circle"><i class="fas fa-balance-scale"></i></div>④ ルール・法則（理）</h3>
+            <textarea id="rules" rows="4" placeholder="魔法の仕組み、物理法則の違い、代償..."></textarea>
+        </div>
+
+        <div class="section">
+            <h3><div class="icon-circle"><i class="fas fa-landmark"></i></div>⑤ 社会構造・政治</h3>
+            <textarea id="social" rows="4" placeholder="誰が支配している？ お金はある？..."></textarea>
+        </div>
+
+        <div class="section">
+            <h3><div class="icon-circle"><i class="fas fa-heart-broken"></i></div>⑥ 世界の“傷”（ドラマの源）</h3>
+            <textarea id="scars" rows="4" placeholder="過去の大災厄、消えた文明、世界の分断..."></textarea>
+        </div>
+
+        <div class="section">
+            <h3><div class="icon-circle"><i class="fas fa-clock"></i></div>⑦ 現在の状況（今）</h3>
+            <textarea id="situation" rows="4" placeholder="平和？ 戦争中？ 衰退している？..."></textarea>
+        </div>
+
+        <!-- ⑧ トーン＆雰囲気 -->
+        <div class="section">
+            <h3><div class="icon-circle"><i class="fas fa-palette"></i></div>⑧ トーン＆雰囲気</h3>
+            <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 15px;">
+                <label style="margin-bottom:0;">世界の色：</label>
+                <input type="color" id="color" value="#ff9800" style="width:50px; height:40px; border:none; padding:0; background:none; cursor:pointer;">
+            </div>
+            
+            <label>音楽のイメージ</label>
+            <input type="text" id="music" value="活気あるポップス" placeholder="例：静かなピアノ...">
+
+            <label>匂い・香り</label>
+            <input type="text" id="scent" value="太陽と土の匂い" placeholder="例：雨の匂い...">
+
+            <label>温度・空気感</label>
+            <input type="text" id="temperature" value="暖かく過ごしやすい" placeholder="例：ひんやりしている...">
+        </div>
+
+        <!-- ⑨ 物語の初期状態 -->
+        <div class="section">
+            <h3><div class="icon-circle"><i class="fas fa-book-open"></i></div>⑨ 物語の初期状態</h3>
+            <label>物語の主題（テーマ）</label>
+            <input type="text" id="theme" placeholder="例：冒険、復讐、恋、成長...">
+
+            <label>物語の発火点（きっかけ）</label>
+            <input type="text" id="trigger" placeholder="例：手紙が届く、空から少女が落ちてくる...">
+        </div>
+    </form>
+
+    <!-- Action Button -->
+    <div style="text-align: center; margin-top: 40px;">
+        <button class="btn-main" onclick="toggleOutput()">
+            <i class="fas fa-eye" style="margin-right: 10px;"></i> 世界を具現化する（確認）
+        </button>
+    </div>
+
+    <!-- Output Area -->
+    <div id="output-area">
+        <div id="capture-target" class="world-bible">
+            <h2 id="bible-title" style="text-align: center; border-bottom: 2px dashed #ffe0b2; padding-bottom: 10px; margin-top: 0;">
+                🌍 World Bible
+            </h2>
+            <div id="bible-content" style="white-space: pre-wrap; font-size: 15px;">
+                <!-- JSで注入 -->
+            </div>
+            <div style="text-align: right; margin-top: 20px; font-size: 12px; color: #ccc;">
+                Created with Cocotte World Maker
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: center; gap: 10px; margin-top: 20px; flex-wrap: wrap;">
+            <button class="btn-sub" onclick="shareWorld()"><i class="fas fa-share-alt" style="margin-right: 8px;"></i> 共有する</button>
+            <button class="btn-main" onclick="saveImage()"><i class="fas fa-image" style="margin-right: 8px;"></i> 画像保存</button>
+            <button class="btn-white" onclick="copyText()"><i class="fas fa-copy" style="margin-right: 8px;"></i> テキストコピー</button>
+        </div>
+    </div>
+
+    <!-- 楽天バナー -->
+    <div style="margin-top: 50px; text-align: center;">
+        <script type="text/javascript">
+            rakuten_design="slide";rakuten_affiliateId="47f67ba0.34b43d0d.47f67ba1.f8c0f51e";rakuten_items="ctsmatch";rakuten_genreId="0";rakuten_size="468x160";rakuten_target="_blank";rakuten_theme="gray";rakuten_border="off";rakuten_auto_mode="on";rakuten_genre_title="off";rakuten_recommend="on";rakuten_ts="1764918656505";
+        </script>
+        <script type="text/javascript" src="https://xml.affiliate.rakuten.co.jp/widget/js/rakuten_widget.js?20230106"></script>
+    </div>
+
+    <!-- TOPへ戻るリンク -->
+    <div class="top-link">
+        <a href="https://mofu-mitsu.github.io/">
+            <i class="fas fa-home" style="margin-right: 8px;"></i> TOPへ戻る
+        </a>
+    </div>
+
+</div>
+
+<!-- Scroll to Top Button -->
+<button id="scroll-top" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+    <i class="fas fa-arrow-up"></i>
+</button>
+
+<script>
+    // --- Data & Logic ---
+    const quirkOptions = [
+        '魔法と科学が融合している', '人間以外の知的種族がいる', '死者と会話ができる', '音楽がエネルギー源',
+        '夢が通貨として流通', '感情が色で見える', 'SNSや精神感応が異常発達', '記憶の売買が可能',
+        '神々が実在し争っている', '動物に人格がある', '嘘をつくと身体に影響が出る', '影が別人格を持つ',
+        '夜が来ない（または朝が来ない）', '空から未知の物体が降ってくる'
+    ];
+
+    // Initialize Checkboxes
+    const quirksContainer = document.getElementById('quirks-container');
+    quirkOptions.forEach(q => {
+        const label = document.createElement('label');
+        label.className = 'checkbox-label';
+        label.innerHTML = `<input type="checkbox" value="${q}"> ${q}`;
+        quirksContainer.appendChild(label);
+    });
+
+    // Generate Text Content
+    function generateContent() {
+        const getValue = (id) => document.getElementById(id).value;
+        const getQuirks = () => {
+            const checked = document.querySelectorAll('#quirks-container input:checked');
+            return Array.from(checked).map(c => c.value).join(', ');
+        };
+
+        const color = getValue('color');
+        
+        // Update Bible Style
+        document.querySelector('.world-bible').style.borderColor = color;
+        document.getElementById('bible-title').style.color = color;
+
+        // Generate Text
+        return `
+<div class="output-item"><span class="output-label">舞台:</span> ${getValue('stageType')}</div>
+<div class="output-item"><span class="output-label">文明:</span> ${getValue('civilization')}</div>
+<div class="output-item"><span class="output-label">環境:</span> ${getValue('environment')}</div>
+<div class="output-item"><span class="output-label">地形:</span> ${getValue('terrain')}</div>
+<div class="output-item"><span class="output-label">動力:</span> ${getValue('energy')}</div>
+
+${getQuirks() ? `<div style="margin:15px 0;"><strong>⚡ 世界のクセ:</strong><br><ul style="margin:5px 0 0 20px; padding:0;">${Array.from(document.querySelectorAll('#quirks-container input:checked')).map(c => `<li>${c.value}</li>`).join('')}</ul></div>` : ''}
+
+${getValue('races') ? `<div class="output-item"><span class="output-label">種族・文化:</span><br>${getValue('races')}</div>` : ''}
+${getValue('rules') ? `<div class="output-item"><span class="output-label">ルール・法則:</span><br>${getValue('rules')}</div>` : ''}
+${getValue('social') ? `<div class="output-item"><span class="output-label">社会構造:</span><br>${getValue('social')}</div>` : ''}
+${getValue('scars') ? `<div class="output-item"><span class="output-label">世界の傷:</span><br>${getValue('scars')}</div>` : ''}
+${getValue('situation') ? `<div class="output-item"><span class="output-label">現在の状況:</span><br>${getValue('situation')}</div>` : ''}
+
+<div style="margin:15px 0; padding:15px; background-color:#fff8e1; border-radius:10px;">
+    <strong>🎨 雰囲気:</strong><br>
+    色: <span style="display:inline-block; width:12px; height:12px; background-color:${color}; border-radius:50%; margin-right:5px; vertical-align:middle;"></span>${color} / 
+    音楽: ${getValue('music')} / 匂い: ${getValue('scent')} / 温度: ${getValue('temperature')}
+</div>
+
+${getValue('theme') ? `<div class="output-item"><span class="output-label">物語の主題:</span> ${getValue('theme')}</div>` : ''}
+${getValue('trigger') ? `<div class="output-item"><span class="output-label">発火点:</span> ${getValue('trigger')}</div>` : ''}
+        `;
+    }
+
+    // Toggle Output
+    function toggleOutput() {
+        const outputArea = document.getElementById('output-area');
+        const contentDiv = document.getElementById('bible-content');
+        
+        if (outputArea.style.display === 'block') {
+            outputArea.style.display = 'none';
+        } else {
+            contentDiv.innerHTML = generateContent();
+            outputArea.style.display = 'block';
+            outputArea.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+
+    // Plain Text for Copy/Share
+    function getPlainText() {
+        const getValue = (id) => document.getElementById(id).value;
+        const checked = document.querySelectorAll('#quirks-container input:checked');
+        const quirkList = Array.from(checked).map(c => c.value).join(', ');
+
+        return `
+【🌏 世界観設定シート】
+
+■ 基礎世界
+・舞台: ${getValue('stageType')}
+・文明: ${getValue('civilization')}
+・環境: ${getValue('environment')}
+・地形: ${getValue('terrain')}
+・動力: ${getValue('energy')}
+
+■ 世界のクセ
+${quirkList || 'なし'}
+
+■ 種族・文化
+${getValue('races')}
+
+■ ルール・法則
+${getValue('rules')}
+
+■ 社会構造
+${getValue('social')}
+
+■ 世界の傷
+${getValue('scars')}
+
+■ 現在の状況
+${getValue('situation')}
+
+■ 雰囲気
+・色: ${getValue('color')}
+・音楽: ${getValue('music')}
+・匂い: ${getValue('scent')}
+・温度: ${getValue('temperature')}
+
+■ 物語の始まり
+・主題: ${getValue('theme')}
+・発火点: ${getValue('trigger')}
+        `.trim();
+    }
+
+    // Copy Text
+    function copyText() {
+        navigator.clipboard.writeText(getPlainText());
+        alert('設定をコピーしたよ！メモ帳に貼ってね📝');
+    }
+
+    // Web Share
+    async function shareWorld() {
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: 'Cocotte World Maker 🍊',
+                    text: getPlainText(),
+                });
+            } catch (err) { console.log(err); }
+        } else {
+            copyText();
+        }
+    }
+
+    // Save Image
+    function saveImage() {
+        const target = document.getElementById('capture-target');
+        html2canvas(target, { scale: 2, backgroundColor: '#ffffff' }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = 'my_world_bible.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        }).catch(err => {
+            alert('ごめんね、画像の保存に失敗しちゃった💦 スクショしてね！');
+        });
+    }
+
+    // Scroll Top Visibility
+    window.addEventListener('scroll', () => {
+        const btn = document.getElementById('scroll-top');
+        if (window.scrollY > 300) btn.style.display = 'block';
+        else btn.style.display = 'none';
+    });
+</script>
+
+</body>
+</html>
